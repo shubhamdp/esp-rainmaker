@@ -31,6 +31,18 @@ before_script:
 - cd ..
 - export HOMEKIT_PATH=$PWD/components/esp-homekit-sdk
 - fi
+- if [[ "$EXAMPLE" == "matter_light" ]]; then
+- mkdir -p components
+- cd components
+- echo Cloning esp-matter
+- git clone --recursive --branch main --depth 1 https://github.com/espressif/esp-matter.git
+- cd esp-matter
+- ./install.sh
+- . ./export.sh
+- cd ..
+- cd ..
+- export ESP_MATTER_PATH=$PWD/components/esp-matter
+- fi
 - for TARGET in $EXAMPLE_TARGETS; do
 - echo Building for $TARGET
 - idf.py set-target $TARGET
@@ -87,6 +99,22 @@ build_idf_v5.0:
   variables:
     EXAMPLE_TARGETS: "esp32 esp32s2 esp32c3 esp32s3"
     EXAMPLES: "switch led_light fan temperature_sensor multi_device gpio"
+
+build_idf_master:
+  extends: .build_template
+  image: espressif/idf:latest
+  variables:
+    EXAMPLE_TARGETS: "esp32 esp32s2 esp32c3 esp32s3"
+    EXAMPLES: "switch led_light fan temperature_sensor multi_device gpio"
+
+build_matter:
+  extends: .build_template
+  image: $CI_DOCKER_REGISTRY/esp32-ci-env:matter
+  tags:
+    - matter_build
+  variables:
+    EXAMPLE_TARGETS: "esp32c3"
+    EXAMPLES: "matter_light"
 
 build_docs:
     stage: build

@@ -37,12 +37,18 @@ include($ENV{ESP_MATTER_DEVICE_PATH}/esp_matter_device.cmake)
 idf_build_set_property(RAINMAKER_ENABLED 1)
 
 set(EXTRA_COMPONENT_DIRS
-    "${ESP_MATTER_PATH}/examples/common"
-    "${IDF_PATH}/examples/common_components"
+    "${IDF_PATH}/examples/common_components/qrcode"
     "${MATTER_SDK_PATH}/config/esp32/components"
     "${ESP_MATTER_PATH}/components"
     "${ESP_MATTER_PATH}/device_hal/device"
-    "${RMAKER_PATH}/components"
+    "${ESP_MATTER_PATH}/examples/common"
+    "${RMAKER_PATH}/examples/common/app_insights"
+    "${RMAKER_PATH}/components/esp-insights/components"
+    "${RMAKER_PATH}/components/esp_rainmaker"
+    "${RMAKER_PATH}/components/esp_schedule"
+    "${RMAKER_PATH}/components/json_generator"
+    "${RMAKER_PATH}/components/json_parser"
+    "${RMAKER_PATH}/components/rmaker_common"
     ${extra_components_dirs_append})
 
 project(matter_light)
