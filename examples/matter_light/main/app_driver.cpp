@@ -52,7 +52,7 @@ static esp_err_t app_driver_light_set_temperature(led_driver_handle_t handle, es
     return led_driver_set_temperature(handle, value);
 }
 
-static void app_driver_button_toggle_cb(void *arg)
+static void app_driver_button_toggle_cb(void *handle, void *usr_data)
 {
     ESP_LOGI(TAG, "Toggle button pressed");
     uint16_t endpoint_id = light_endpoint_id;
@@ -89,7 +89,7 @@ esp_err_t app_driver_attribute_update(app_driver_handle_t driver_handle, uint16_
                 err = app_driver_light_set_hue(handle, val);
             } else if (attribute_id == ColorControl::Attributes::CurrentSaturation::Id) {
                 err = app_driver_light_set_saturation(handle, val);
-            } else if (attribute_id == ColorControl::Attributes::ColorTemperature::Id) {
+            } else if (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id) {
                 err = app_driver_light_set_temperature(handle, val);
             }
         }
@@ -129,7 +129,7 @@ esp_err_t app_driver_light_set_defaults(uint16_t endpoint_id)
         err |= app_driver_light_set_saturation(handle, &val);
     } else if (val.val.u8 == EMBER_ZCL_COLOR_MODE_COLOR_TEMPERATURE) {
         /* Setting temperature */
-        attribute = attribute::get(cluster, ColorControl::Attributes::ColorTemperature::Id);
+        attribute = attribute::get(cluster, ColorControl::Attributes::ColorTemperatureMireds::Id);
         attribute::get_val(attribute, &val);
         err |= app_driver_light_set_temperature(handle, &val);
     } else {
@@ -158,6 +158,6 @@ app_driver_handle_t app_driver_button_init()
     /* Initialize button */
     button_config_t config = button_driver_get_config();
     button_handle_t handle = iot_button_create(&config);
-    iot_button_register_cb(handle, BUTTON_PRESS_DOWN, app_driver_button_toggle_cb);
+    iot_button_register_cb(handle, BUTTON_PRESS_DOWN, app_driver_button_toggle_cb, NULL);
     return (app_driver_handle_t)handle;
 }

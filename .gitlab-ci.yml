@@ -32,16 +32,8 @@ before_script:
 - export HOMEKIT_PATH=$PWD/components/esp-homekit-sdk
 - fi
 - if [[ "$EXAMPLE" == "matter_light" ]]; then
-- mkdir -p components
-- cd components
-- echo Cloning esp-matter
-- git clone --recursive --branch main --depth 1 https://github.com/espressif/esp-matter.git
-- cd esp-matter
-- ./install.sh
-- . ./export.sh
-- cd ..
-- cd ..
-- export ESP_MATTER_PATH=$PWD/components/esp-matter
+- . $IDF_PATH/export.sh
+- . $ESP_MATTER_PATH/export.sh
 - fi
 - for TARGET in $EXAMPLE_TARGETS; do
 - echo Building for $TARGET
@@ -63,7 +55,7 @@ before_script:
   tags:
     - build
   variables:
-    PEDANTIC_FLAGS: "-Werror -Werror=deprecated-declarations -Wno-error=cpp -Werror=unused-variable -Werror=unused-but-set-variable -Werror=unused-function"
+    PEDANTIC_FLAGS: "-Werror=deprecated-declarations -Wno-error=cpp -Werror=unused-variable -Werror=unused-but-set-variable -Werror=unused-function"
     EXTRA_CFLAGS: "${PEDANTIC_FLAGS}"
     EXTRA_CXXFLAGS: "${PEDANTIC_FLAGS}"
     EXAMPLE_TARGETS: "esp32"
@@ -100,19 +92,13 @@ build_idf_v5.0:
     EXAMPLE_TARGETS: "esp32 esp32s2 esp32c3 esp32s3"
     EXAMPLES: "switch led_light fan temperature_sensor multi_device gpio"
 
-build_idf_master:
+build_matter_example:
   extends: .build_template
-  image: espressif/idf:latest
-  variables:
-    EXAMPLE_TARGETS: "esp32 esp32s2 esp32c3 esp32s3"
-    EXAMPLES: "switch led_light fan temperature_sensor multi_device gpio"
-
-build_matter:
-  extends: .build_template
-  image: $CI_DOCKER_REGISTRY/esp32-ci-env:matter
+  image: registry.hub.docker.com/espressif/esp-matter:latest
   tags:
-    - matter_build
+    - build
   variables:
+    PEDANTIC_FLAGS: "-Werror=deprecated-declarations -Wno-error=cpp -Werror=unused-but-set-variable -Werror=unused-function"
     EXAMPLE_TARGETS: "esp32c3"
     EXAMPLES: "matter_light"
 

@@ -49,7 +49,7 @@ esp_rmaker_param_val_t app_rainmaker_get_rmaker_val(esp_matter_attr_val_t *val, 
         } else if (attribute_id == ColorControl::Attributes::CurrentSaturation::Id) {
             int value = REMAP_TO_RANGE(val->val.u8, MATTER_SATURATION, STANDARD_SATURATION);
             return esp_rmaker_int(value);
-        } else if (attribute_id == ColorControl::Attributes::ColorTemperature::Id) {
+        } else if (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id) {
             int value = REMAP_TO_RANGE_INVERSE(val->val.u16, STANDARD_TEMPERATURE_FACTOR);
             return esp_rmaker_int(value);
         }
@@ -90,7 +90,7 @@ esp_matter_attr_val_t app_rainmaker_get_matter_val(esp_rmaker_param_val_t *val, 
         } else if (attribute_id == ColorControl::Attributes::CurrentSaturation::Id) {
             uint8_t value = REMAP_TO_RANGE(val->val.i, STANDARD_SATURATION, MATTER_SATURATION);
             return esp_matter_uint8(value);
-        } else if (attribute_id == ColorControl::Attributes::ColorTemperature::Id) {
+        } else if (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id) {
             uint16_t value = REMAP_TO_RANGE_INVERSE(val->val.i, MATTER_TEMPERATURE_FACTOR);
             return esp_matter_uint16(value);
         }
@@ -148,7 +148,7 @@ const char *app_rainmaker_get_param_name_from_id(uint32_t cluster_id, uint32_t a
             return ESP_RMAKER_DEF_HUE_NAME;
         } else if (attribute_id == ColorControl::Attributes::CurrentSaturation::Id) {
             return ESP_RMAKER_DEF_SATURATION_NAME;
-        } else if (attribute_id == ColorControl::Attributes::ColorTemperature::Id) {
+        } else if (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id) {
             return ESP_RMAKER_DEF_CCT_NAME;
         }
     }
@@ -170,7 +170,7 @@ static const char *app_rainmaker_get_param_type_from_id(uint32_t cluster_id, uin
             return ESP_RMAKER_PARAM_HUE;
         } else if (attribute_id == ColorControl::Attributes::CurrentSaturation::Id) {
             return ESP_RMAKER_PARAM_SATURATION;
-        } else if (attribute_id == ColorControl::Attributes::ColorTemperature::Id) {
+        } else if (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id) {
             return ESP_RMAKER_PARAM_CCT;
         }
     }
@@ -192,7 +192,7 @@ static const char *app_rainmaker_get_param_ui_type_from_id(uint32_t cluster_id, 
             return ESP_RMAKER_UI_HUE_SLIDER;
         } else if (attribute_id == ColorControl::Attributes::CurrentSaturation::Id) {
             return ESP_RMAKER_UI_SLIDER;
-        } else if (attribute_id == ColorControl::Attributes::ColorTemperature::Id) {
+        } else if (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id) {
             return ESP_RMAKER_UI_SLIDER;
         }
     }
@@ -220,7 +220,7 @@ static bool app_rainmaker_get_param_bounds_from_id(uint32_t cluster_id, uint32_t
             *max = STANDARD_SATURATION;
             *step = 1;
             return true;
-        } else if (attribute_id == ColorControl::Attributes::ColorTemperature::Id) {
+        } else if (attribute_id == ColorControl::Attributes::ColorTemperatureMireds::Id) {
             *min = 2700;
             *max = 6500;
             *step = 100;
@@ -293,7 +293,7 @@ uint32_t app_rainmaker_get_attribute_id_from_name(const char *param_name)
     } else if (strcmp(param_name, ESP_RMAKER_DEF_SATURATION_NAME) == 0) {
         return ColorControl::Attributes::CurrentSaturation::Id;
     } else if (strcmp(param_name, ESP_RMAKER_DEF_CCT_NAME) == 0) {
-        return ColorControl::Attributes::ColorTemperature::Id;
+        return ColorControl::Attributes::ColorTemperatureMireds::Id;
     }
     return 0;
 }
@@ -307,8 +307,9 @@ static esp_rmaker_device_t *app_rainmaker_device_create(const esp_rmaker_node_t 
         return NULL;
     }
     /* Add this device only if endpoint_id has been handled */
-    uint32_t device_type_id = endpoint::get_device_type_id(endpoint);
-    const char *device_type = app_rainmaker_get_device_type_from_id(device_type_id);
+    uint8_t device_type_count = 0;
+    uint32_t *device_type_id = endpoint::get_device_type_ids(endpoint, &device_type_count);
+    const char *device_type = app_rainmaker_get_device_type_from_id(*device_type_id);
     esp_rmaker_device_t *device = esp_rmaker_device_create(device_name, device_type, NULL);
     if (!device) {
         ESP_LOGE(TAG, "Could not create rainmaker device");

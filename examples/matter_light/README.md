@@ -69,7 +69,9 @@ will print the user-id and secret-key (do not close this):
 
 ```
 rainmaker.py test --addnode <rainmaker-node-id>
-
+```
+The command will output the following details.
+```
 >> add-user <user-id> <secret-key>
 ```
 
@@ -78,7 +80,7 @@ Prepare the command payload using the above details:
 ```
 payload: <user-id>::<secret-key>
 ```
-
+*Note:* Do not terminate the Rainmaker CLI script. 
 Now use the payload to run the RainMaker configuration command from
 chip-tool:
 
@@ -86,7 +88,8 @@ chip-tool:
 chip-tool any command-by-id 0x131bfc00 0x0 '"<user-id>::<secret-key>"' 0x7283 0x0
 ```
 
-The device/node should now be associated with the user.
+The device/node should now be associated with the user. 
+*Note:* The user node association process needs to be done in one minute otherwise the request will time out and the process has to be repeated again.
 
 ### 2.2 Device console
 
@@ -106,7 +109,7 @@ The following is the Memory and Flash Usage.
 
 -   `Bootup` == Device just finished booting up. Device is not
     commissionined or connected to wifi yet.
--   `After Commissioning` == Device is conneted to wifi and is also
+-   `After Commissioning` == Device is connected to wifi and is also
     commissioned and is rebooted.
 -   device used: esp32c3_devkit_m
 -   tested on:

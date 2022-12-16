@@ -12,8 +12,6 @@
 #include <nvs_flash.h>
 #include <string.h>
 
-#include <app_ble.h>
-#include <app_qrcode.h>
 #include <esp_matter_rainmaker.h>
 #include <esp_route_hook.h>
 
@@ -42,7 +40,6 @@ static void app_event_cb(const ChipDeviceEvent *event, intptr_t arg)
 
     case chip::DeviceLayer::DeviceEventType::PublicEventTypes::kCommissioningComplete:
         ESP_LOGI(TAG, "Commissioning complete");
-        app_ble_disable();
         break;
 
     default:
@@ -112,7 +109,5 @@ esp_err_t app_matter_start()
     if (err != ESP_OK) {
         ESP_LOGE(TAG, "Matter start failed: %d", err);
     }
-    app_qrcode_print();
     return err;
 }
-

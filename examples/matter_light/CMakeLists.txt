@@ -37,7 +37,6 @@ include($ENV{ESP_MATTER_DEVICE_PATH}/esp_matter_device.cmake)
 idf_build_set_property(RAINMAKER_ENABLED 1)
 
 set(EXTRA_COMPONENT_DIRS
-    "${IDF_PATH}/examples/common_components/qrcode"
     "${MATTER_SDK_PATH}/config/esp32/components"
     "${ESP_MATTER_PATH}/components"
     "${ESP_MATTER_PATH}/device_hal/device"
