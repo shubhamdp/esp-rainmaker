@@ -1,5 +1,5 @@
 set(PRIV_REQUIRES_LIST device esp_matter esp_matter_console esp_matter_rainmaker route_hook app_reset
-                       esp_rainmaker app_insights)
+                       esp_rainmaker app_insights json_parser)
 
 idf_component_register(SRC_DIRS          "."
                       PRIV_INCLUDE_DIRS  "."
