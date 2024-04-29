@@ -20,7 +20,7 @@ name: Build Examples
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["master"]
+    branches: ["master", "launchpad_support"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,7 +39,7 @@ concurrency:
 jobs:
   Build:
     # Disable the job in forks
-    if: ${{ github.repository_owner == 'espressif' }}
+    # if: ${{ github.repository_owner == 'espressif' }}
 
     runs-on: ubuntu-latest
     container:
@@ -80,7 +80,7 @@ jobs:
 
   deploy:
     # Disable the job in forks
-    if: ${{ github.repository_owner == 'espressif' }}
+    # if: ${{ github.repository_owner == 'espressif' }}
 
     needs: Build
 
