@@ -60,6 +60,7 @@ jobs:
 
       - name: build application
         run: |
+          . $IDF_PATH/export.sh
           export ESP_RMAKER_PATH=$PWD
           cd examples/${{ matrix.example }}
 
