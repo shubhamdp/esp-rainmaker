@@ -39,7 +39,7 @@ concurrency:
 jobs:
   Build:
     # Disable the job in forks
-    if: ${{ github.repository_owner == 'espressif' }}
+    # if: ${{ github.repository_owner == 'espressif' }}
 
     runs-on: ubuntu-latest
     container:
@@ -82,7 +82,7 @@ jobs:
 
   deploy:
     # Disable the job in forks
-    if: ${{ github.repository_owner == 'espressif' }}
+    # if: ${{ github.repository_owner == 'espressif' }}
 
     needs: Build
 
